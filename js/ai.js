@@ -41,8 +41,11 @@
             const nx = bot.x + dx;
             const ny = bot.y + dy;
             const minePenalty = state.mines.has(nx + "," + ny) ? 1000 : 0;
+            // Aiming at a cell another live bot already stands on risks a head-on
+            // collision (both stay), so treat it as expensive but not fatal.
+            const occupied = Engine.aliveBots(state).some((o) => o.id !== bot.id && o.x === nx && o.y === ny);
             const dist = Math.abs(nx - state.flag.x) + Math.abs(ny - state.flag.y);
-            const score = dist + minePenalty;
+            const score = dist + minePenalty + (occupied ? 500 : 0);
             if (score < bestScore) {
                 bestScore = score;
                 best = m;

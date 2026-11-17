@@ -96,7 +96,12 @@
         if (Engine.isOver(state)) {
             running = false;
             el("start").textContent = "Start";
-            setStatus(state.winner ? nameOf(state.winner) + " reached the flag — winner." : "All pilots destroyed.");
+            if (state.winner) {
+                const how = state.decidedBy === "closest" ? "closest to the flag when the turn budget ran out" : "reached the flag";
+                setStatus(nameOf(state.winner) + " wins — " + how + ".");
+            } else {
+                setStatus("All pilots destroyed.");
+            }
         }
     }
 
@@ -112,7 +117,10 @@
         if (!state || Engine.isOver(state)) newGame();
         running = !running;
         el("start").textContent = running ? "Pause" : "Start";
-        if (running) loop();
+        if (running) {
+            setStatus(key() ? "Models are playing." : "Playing with the engine's pathfinding (no key connected).");
+            loop();
+        }
     });
     el("step").addEventListener("click", () => {
         if (!state || Engine.isOver(state)) newGame();

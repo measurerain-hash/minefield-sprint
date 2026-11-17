@@ -71,6 +71,8 @@
             walls,
             mines,
             turn: 0,
+            maxTurns: opts.maxTurns != null ? opts.maxTurns : 60,
+            decidedBy: null,
             winner: null,
             bots: bots.map((b, i) => ({
                 id: b.id,
@@ -168,9 +170,27 @@
         }
 
         const onFlag = state.bots.find((b) => b.alive && b.x === state.flag.x && b.y === state.flag.y);
-        if (onFlag) state.winner = onFlag.id;
+        if (onFlag) {
+            state.winner = onFlag.id;
+            state.decidedBy = "flag";
+        }
         state.turn++;
         state.log.push({ turn: state.turn, events });
+
+        // A model-driven game may never reach the flag on its own, so the engine ends it
+        // on a turn budget and breaks the tie in code: closest bot to the flag, then
+        // fewest steps. The verdict stays measurable, not model-declared.
+        if (!state.winner && state.turn >= state.maxTurns) {
+            const alive = aliveBots(state).slice().sort((a, b) => {
+                const da = Math.abs(a.x - state.flag.x) + Math.abs(a.y - state.flag.y);
+                const db = Math.abs(b.x - state.flag.x) + Math.abs(b.y - state.flag.y);
+                return da - db || a.steps - b.steps;
+            });
+            if (alive.length) {
+                state.winner = alive[0].id;
+                state.decidedBy = "closest";
+            }
+        }
         return events;
     }
 

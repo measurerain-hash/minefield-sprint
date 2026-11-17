@@ -90,3 +90,19 @@ test("the game is over when no bot is alive", () => {
     g.bots[1].alive = false;
     assert.equal(Engine.isOver(g), true);
 });
+test("the turn budget ends the game and breaks the tie in code", () => {
+    const g = make({ maxTurns: 2 });
+    g.walls.clear();
+    g.mines.clear();
+    g.bots[0].x = 0;
+    g.bots[0].y = 0;
+    g.bots[1].x = 0;
+    g.bots[1].y = 1;
+    g.flag.x = 4;
+    g.flag.y = 4;
+    Engine.applyMoves(g, { a: "down", b: "down" });
+    Engine.applyMoves(g, { a: "down", b: "down" });
+    assert.equal(Engine.isOver(g), true);
+    assert.equal(g.decidedBy, "closest");
+    assert.equal(g.winner, "b"); // b started closer to the flag
+});

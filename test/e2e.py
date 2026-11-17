@@ -63,9 +63,8 @@ def main():
             page.click("#start")
             # wait for the engine to decide a winner
             page.wait_for_function(
-                "() => document.getElementById('status').textContent.includes('winner') || "
-                "document.getElementById('status').textContent.includes('All pilots')",
-                timeout=30000,
+                "() => { const s=document.getElementById('status').textContent; return s.includes('wins') || s.includes('All pilots'); }",
+                timeout=90000,
             )
             status = page.inner_text("#status")
             turns = page.inner_text("#turn")
