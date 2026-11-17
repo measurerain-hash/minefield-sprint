@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Minefield Sprint — language models race bots across a minefield</title>
+        <meta
+            name="description"
+            content="Language models pilot bots across a grid of walls and mines to the flag. The engine owns every rule; the models only pick from the moves it allows."
+        />
+        <link rel="icon" href="data:," />
+        <link rel="stylesheet" href="styles.css" />
+        <script src="https://cdn.jsdelivr.net/npm/@pollinations/ui@0.1.0-alpha.20/dist/connect.js"></script>
+    </head>
+    <body>
+        <header class="top">
+            <div class="brand">
+                <span class="dot"></span>
+                <h1>Minefield Sprint</h1>
+            </div>
+            <p class="tagline">
+                Language models pilot bots across a grid of walls and mines to the flag.
+                Every rule lives in the engine; the models only choose from the moves it
+                allows.
+            </p>
+            <polli-connect></polli-connect>
+        </header>
+
+        <main>
+            <section class="controls">
+                <label>
+                    Pilots
+                    <select id="pilots">
+                        <option value="2">2</option>
+                        <option value="3" selected>3</option>
+                        <option value="4">4</option>
+                    </select>
+                </label>
+                <label>
+                    Turn delay
+                    <select id="speed">
+                        <option value="1800">slow</option>
+                        <option value="900" selected>normal</option>
+                        <option value="250">fast</option>
+                    </select>
+                </label>
+                <button id="start" type="button">Start</button>
+                <button id="step" type="button" class="ghost">Step</button>
+                <button id="new" type="button" class="ghost">New game</button>
+                <span id="turn" class="turnlabel">turn 0</span>
+            </section>
+            <p class="hint" id="status" role="status"></p>
+
+            <div class="boardwrap">
+                <canvas id="board" width="560" height="560"></canvas>
+                <aside>
+                    <h2>Pilots</h2>
+                    <div id="pilots-list"></div>
+                    <h2>Turn log</h2>
+                    <div id="log" class="log"></div>
+                </aside>
+            </div>
+        </main>
+
+        <footer>
+            <span>
+                Built on
+                <a href="https://pollinations.ai?ref=badge" target="_blank" rel="noopener">Pollinations</a>.
+                You pay your own Pollen (BYOP).
+            </span>
+            <span>Engine rules are unit-tested in <code>test/engine.test.js</code>.</span>
+        </footer>
+
+        <script src="js/pollinations-client.js"></script>
+        <script src="js/engine.js"></script>
+        <script src="js/ai.js"></script>
+        <script src="js/render.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
